@@ -1,6 +1,7 @@
 import os
 from puput import PUPUT_APPS
 
+
 def cast(value):
     """Returns int, bool or str"""
     try:
@@ -16,11 +17,7 @@ def cast(value):
 def get(var_name, default=None):
     """Gets conf from env"""
     if default is None:
-        try:
-            value = os.environ[var_name]
-        except KeyError:
-            error_msg = 'Set the {} environment variable'.format(var_name)
-            raise ImproperlyConfigured(error_msg)
+        value = os.environ[var_name]
     else:
         value = os.getenv(var_name, default)
     return cast(value)
@@ -42,18 +39,18 @@ INSTALLED_APPS = (
 )
 INSTALLED_APPS += PUPUT_APPS
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'wagtail.wagtailcore.middleware.SiteMiddleware',
-    'wagtail.wagtailredirects.middleware.RedirectMiddleware',
-)
+
+    'wagtail.core.middleware.SiteMiddleware',
+    'wagtail.contrib.redirects.middleware.RedirectMiddleware',
+]
 
 ROOT_URLCONF = 'blog.urls'
 
@@ -68,7 +65,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.core.context_processors.request',
             ],
         },
     },
@@ -84,7 +80,7 @@ DATABASES = {
         'PASSWORD': get('DATABASE_PASSWORD', 'p1234'),
         'HOST': get('DATABASE_HOST', 'mysql'),
         'PORT': get('DATABASE_PORT', 3306),
-        #'OPTIONS': {},
+        # 'OPTIONS': {},
     }
 }
 
